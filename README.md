@@ -4,14 +4,14 @@
 
 Train fast, local reward models that replicate Claude's evaluation of language tutor responses—enabling scalable response selection and reinforcement learning without API costs.
 
-## 🎯 Purpose
+##  Purpose
 
 This repo creates reward models that can:
 - **Score tutor responses** on pedagogical quality (engagement, accuracy, personalization)
 - **Enable best-of-N sampling** in your own code to select best responses
 - **Be used in DPO training** 
 
-## 🚀 Quick Start
+##  Quick Start
 
 ### 1. Setup
 ```bash
@@ -135,13 +135,13 @@ print(f"Selected response with score {scores[best_idx]:.2f}")
 
 See `docs/USAGE.md` for more detailed examples.
 
-## 📚 Documentation
+##  Documentation
 
 - [DATA_FORMAT.md](docs/DATA_FORMAT.md) - Required input data format
 - [JUDGING_CRITERIA.md](docs/JUDGING_CRITERIA.md) - Evaluation dimensions explained
 - [USAGE.md](docs/USAGE.md) - Code examples and integration patterns
 
-## 🧪 Development
+##  Development
 
 ### Running Tests
 ```bash
@@ -164,7 +164,7 @@ isort src/ scripts/ tests/
 flake8 src/ scripts/ tests/
 ```
 
-## 🔒 Privacy & Data
+##  Privacy & Data
 
 
 All conversation files are gitignored to protect privacy:
@@ -175,7 +175,7 @@ All conversation files are gitignored to protect privacy:
 Only example files and code are version controlled.
 
 
-## 🛠️ Configuration
+##  Configuration
 
 Customize behavior via YAML configs in `config/`:
 
