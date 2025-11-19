@@ -1,0 +1,228 @@
+# Fully Fluent Reward Model
+
+Train lightweight reward models from Claude judgments for evaluating language tutor responses.
+
+## 🎯 Purpose
+
+This repo creates reward models that can:
+- **Score tutor responses** on pedagogical quality (engagement, accuracy, personalization, etc.)
+- **Enable best-of-N sampling** in your own code to select best responses
+- **Be used in DPO training** (in the companion `fully-fluent-dpo-trainer` repo)
+- **Replace expensive Claude API calls** with lightweight, fast models
+
+## 🚀 Quick Start
+
+### 1. Setup
+```bash
+# Clone repo
+git clone https://github.com/your-username/fully-fluent-reward-model.git
+cd fully-fluent-reward-model
+
+# Create virtual environment
+python -m venv venv
+source venv/bin/activate  # On Windows: venv\Scripts\activate
+
+# Install dependencies
+pip install -r requirements.txt
+
+# Setup environment variables
+cp .env.example .env
+# Edit .env and add your ANTHROPIC_API_KEY
+```
+
+### 2. Prepare Data
+
+Place your conversation data in `data/conversations.json`:
+```json
+[
+  {
+    "context": "Full conversation history up to this point",
+    "student_message": "Student's current message",
+    "tutor_response": "Tutor's response to evaluate"
+  }
+]
+```
+
+**Required fields:**
+- `context`: String with full conversation history
+- `student_message`: String with student's current message
+- `tutor_response`: String with tutor's response to judge
+
+See [docs/DATA_FORMAT.md](docs/DATA_FORMAT.md) for complete specification.
+
+### 3. Run Pipeline
+```bash
+# Full pipeline (all steps)
+bash scripts/run_full_pipeline.sh
+
+# Or run step by step:
+python scripts/01_validate_data.py
+python scripts/02_judge_responses.py
+python scripts/03_train_reward_model.py
+python scripts/04_evaluate_reward_model.py
+```
+
+## 📊 Results
+
+The pipeline produces:
+
+- **Trained reward model**: `models/reward_model_final/`
+- **Claude judgments**: `data/judgments/claude_judgments.json`
+- **Performance metrics**: `outputs/metrics/`
+- **Training logs**: `outputs/logs/`
+- **Evaluation report**: Shows correlation between reward model and Claude scores
+
+## 🔧 Using the Reward Model
+
+### In Your Own Code
+```python
+from src.reward_model.inference import RewardModelScorer
+
+# Load trained model
+scorer = RewardModelScorer("models/reward_model_final")
+
+# Score a single response
+score = scorer.score(
+    context="Student: I want to learn present tense.",
+    response="Great! Let me explain present tense. It's used for habits..."
+)
+print(f"Quality Score: {score:.2f}")
+
+# Score multiple responses (batched for efficiency)
+scores = scorer.score_batch(
+    contexts=[context1, context2, context3],
+    responses=[response1, response2, response3]
+)
+```
+
+### Best-of-N Sampling Example
+```python
+from transformers import AutoModelForCausalLM, AutoTokenizer
+from src.reward_model.inference import RewardModelScorer
+
+# Load your base model
+base_model = AutoModelForCausalLM.from_pretrained("Qwen/Qwen2.5-7B-Instruct")
+tokenizer = AutoTokenizer.from_pretrained("Qwen/Qwen2.5-7B-Instruct")
+
+# Load reward model
+scorer = RewardModelScorer("models/reward_model_final")
+
+# Generate N candidates
+context = "Student: Help me with grammar"
+candidates = []
+for _ in range(5):
+    inputs = tokenizer(context, return_tensors="pt")
+    output = base_model.generate(
+        **inputs,
+        max_new_tokens=100,
+        do_sample=True,
+        temperature=0.7
+    )
+    candidates.append(tokenizer.decode(output[0], skip_special_tokens=True))
+
+# Score all candidates
+scores = scorer.score_batch(
+    contexts=[context] * len(candidates),
+    responses=candidates
+)
+
+# Select best
+best_idx = scores.index(max(scores))
+best_response = candidates[best_idx]
+print(f"Selected response with score {scores[best_idx]:.2f}")
+```
+
+See `docs/USAGE.md` for more detailed examples.
+
+## 📚 Documentation
+
+- [DATA_FORMAT.md](docs/DATA_FORMAT.md) - Required input data format
+- [JUDGING_CRITERIA.md](docs/JUDGING_CRITERIA.md) - Evaluation dimensions explained
+- [USAGE.md](docs/USAGE.md) - Code examples and integration patterns
+
+## 🧪 Development
+
+### Running Tests
+```bash
+# Run all tests
+pytest tests/
+
+# Run with coverage
+pytest --cov=src tests/
+```
+
+### Code Formatting
+```bash
+# Format code
+black src/ scripts/ tests/
+
+# Sort imports
+isort src/ scripts/ tests/
+
+# Lint
+flake8 src/ scripts/ tests/
+```
+
+## 🔒 Privacy & Data
+
+**This repository does NOT contain actual conversation data.**
+
+All conversation files are gitignored to protect privacy:
+- `data/conversations.json` - YOUR data (never committed)
+- `data/judgments/*` - Generated judgments (never committed)
+- `models/*` - Trained models (never committed)
+
+Only example files and code are version controlled.
+
+## 📈 Performance Expectations
+
+**Minimum data requirements:**
+- **Demo/Testing**: 50-100 conversation turns
+- **Meaningful results**: 200-500 turns
+- **Production quality**: 1000+ turns
+
+**Expected metrics:**
+- Pearson correlation with Claude: 0.75-0.85
+- Training time: ~10-30 minutes (depends on data size)
+- Inference speed: ~100-1000 scores/second (on GPU)
+
+## 🛠️ Configuration
+
+Customize behavior via YAML configs in `config/`:
+
+### `judge_config.yaml`
+- Evaluation dimensions and weights
+- Claude model settings
+- Prompt templates
+
+### `reward_model_config.yaml`
+- Model architecture
+- Training hyperparameters
+- Data split ratios
+
+## 🤝 Contributing
+
+Contributions welcome! Please:
+1. Fork the repo
+2. Create a feature branch
+3. Add tests for new functionality
+4. Ensure tests pass and code is formatted
+5. Submit a pull request
+
+## 📝 License
+
+MIT License - see [LICENSE](LICENSE) file for details.
+
+## 🙋 Support
+
+For issues or questions:
+- Open a GitHub issue
+- Check existing documentation in `docs/`
+- Review example notebooks in `notebooks/`
+
+## 🗺️ Roadmap
+
+- [ ] Support for multi-lingual tutoring
+- [ ] Additional reward model architectures
+- [ ] Real-time streaming evaluation
+- [ ] Integration with popular LLM frameworks

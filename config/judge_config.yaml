@@ -1,0 +1,48 @@
+# Claude Judge Configuration
+
+# Anthropic API settings
+api:
+  model: "claude-sonnet-4-20250514"
+  max_tokens: 1000
+  temperature: 0.0  # Deterministic for consistency
+
+# Evaluation dimensions
+# Each dimension will be scored 1-10
+dimensions:
+  - name: "engagement"
+    description: "How well does the response encourage student participation and interest?"
+    weight: 1.0
+
+  - name: "accuracy"
+    description: "Is the linguistic/grammatical information correct?"
+    weight: 1.5
+
+  - name: "clarity"
+    description: "Is the explanation clear and appropriate for the student's level?"
+    weight: 1.2
+
+  - name: "personalization"
+    description: "Does the response adapt to the student's context, interests, and level?"
+    weight: 1.0
+
+  - name: "pedagogical_value"
+    description: "Does the response effectively teach and reinforce learning?"
+    weight: 1.3
+
+# Overall score calculation
+overall:
+  method: "weighted_average"  # Options: weighted_average, min, max
+  scale: [1, 10]  # Output scale
+
+# Batch processing
+batch:
+  size: 10  # Number of conversations to judge in parallel
+  retry_attempts: 3
+  retry_delay: 2  # seconds
+  rate_limit_delay: 1  # seconds between API calls
+
+# Output settings
+output:
+  save_path: "data/judgments/claude_judgments.json"
+  include_reasoning: true  # Include Claude's explanation
+  pretty_print: true

@@ -1,0 +1,80 @@
+# Reward Model Training Configuration
+
+# Model architecture
+model:
+  base_model: "distilbert-base-uncased"  # Lightweight and fast
+  # Alternative options:
+  # - "bert-base-uncased"
+  # - "microsoft/deberta-v3-small"
+  # - "sentence-transformers/all-MiniLM-L6-v2"
+
+  hidden_size: 768
+  num_labels: 1  # Regression task (predicting score)
+  dropout: 0.1
+  max_length: 512  # Maximum sequence length
+
+# Training hyperparameters
+training:
+  num_epochs: 10
+  batch_size: 16
+  learning_rate: 0.00002
+  warmup_steps: 100
+  weight_decay: 0.01
+  gradient_accumulation_steps: 1
+
+  # Early stopping
+  early_stopping:
+    enabled: true
+    patience: 3
+    metric: "eval_loss"
+    mode: "min"
+
+  # Optimizer
+  optimizer: "adamw"
+  adam_beta1: 0.9
+  adam_beta2: 0.999
+  adam_epsilon: 0.00000001
+  max_grad_norm: 1.0
+
+# Data settings
+data:
+  train_split: 0.8
+  val_split: 0.1
+  test_split: 0.1
+  shuffle: true
+  seed: 42
+
+  # Augmentation (optional)
+  augmentation:
+    enabled: false
+    noise_prob: 0.1
+
+# Logging
+logging:
+  log_dir: "outputs/logs"
+  tensorboard: true
+  wandb:
+    enabled: false  # Set to true if using W&B
+    project: "fully-fluent-reward-model"
+    entity: null  # Your W&B username/team
+
+  log_every_n_steps: 10
+  eval_every_n_steps: 100
+  save_every_n_steps: 500
+
+# Evaluation
+evaluation:
+  metrics:
+    - "pearson_correlation"
+    - "spearman_correlation"
+    - "mse"
+    - "mae"
+
+  # Minimum acceptable performance
+  min_correlation: 0.7  # Warn if below this
+
+# Output
+output:
+  save_path: "models/reward_model_final"
+  save_optimizer_state: false
+  save_best_only: true
