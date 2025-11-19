@@ -165,26 +165,14 @@ flake8 src/ scripts/ tests/
 
 ## 🔒 Privacy & Data
 
-**This repository does NOT contain actual conversation data.**
 
 All conversation files are gitignored to protect privacy:
-- `data/conversations.json` - YOUR data (never committed)
-- `data/judgments/*` - Generated judgments (never committed)
-- `models/*` - Trained models (never committed)
+- `data/conversations.json` 
+- `data/judgments/*` 
+- `models/*`
 
 Only example files and code are version controlled.
 
-## 📈 Performance Expectations
-
-**Minimum data requirements:**
-- **Demo/Testing**: 50-100 conversation turns
-- **Meaningful results**: 200-500 turns
-- **Production quality**: 1000+ turns
-
-**Expected metrics:**
-- Pearson correlation with Claude: 0.75-0.85
-- Training time: ~10-30 minutes (depends on data size)
-- Inference speed: ~100-1000 scores/second (on GPU)
 
 ## 🛠️ Configuration
 
@@ -200,14 +188,6 @@ Customize behavior via YAML configs in `config/`:
 - Training hyperparameters
 - Data split ratios
 
-## 🤝 Contributing
-
-Contributions welcome! Please:
-1. Fork the repo
-2. Create a feature branch
-3. Add tests for new functionality
-4. Ensure tests pass and code is formatted
-5. Submit a pull request
 
 ## 📝 License
 
@@ -220,9 +200,3 @@ For issues or questions:
 - Check existing documentation in `docs/`
 - Review example notebooks in `notebooks/`
 
-## 🗺️ Roadmap
-
-- [ ] Support for multi-lingual tutoring
-- [ ] Additional reward model architectures
-- [ ] Real-time streaming evaluation
-- [ ] Integration with popular LLM frameworks
