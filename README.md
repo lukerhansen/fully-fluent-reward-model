@@ -193,11 +193,3 @@ Customize behavior via YAML configs in `config/`:
 ## 📝 License
 
 MIT License - see [LICENSE](LICENSE) file for details.
-
-## 🙋 Support
-
-For issues or questions:
-- Open a GitHub issue
-- Check existing documentation in `docs/`
-- Review example notebooks in `notebooks/`
-
