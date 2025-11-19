@@ -1,14 +1,15 @@
 # Fully Fluent Reward Model
 
-Train lightweight reward models from Claude judgments for evaluating language tutor responses.
+**Distill Claude's judgment into a lightweight reward model for efficient best-of-N sampling and RLAIF.**
+
+Train fast, local reward models that replicate Claude's evaluation of language tutor responses—enabling scalable response selection and reinforcement learning without API costs.
 
 ## 🎯 Purpose
 
 This repo creates reward models that can:
-- **Score tutor responses** on pedagogical quality (engagement, accuracy, personalization, etc.)
+- **Score tutor responses** on pedagogical quality (engagement, accuracy, personalization)
 - **Enable best-of-N sampling** in your own code to select best responses
-- **Be used in DPO training** (in the companion `fully-fluent-dpo-trainer` repo)
-- **Replace expensive Claude API calls** with lightweight, fast models
+- **Be used in DPO training** 
 
 ## 🚀 Quick Start
 
