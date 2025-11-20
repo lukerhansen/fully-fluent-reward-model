@@ -9,7 +9,7 @@ Train fast, local reward models that replicate Claude's evaluation of language t
 This repo creates reward models that can:
 - **Score tutor responses** on pedagogical quality (engagement, accuracy, personalization)
 - **Enable best-of-N sampling** during inference to select best responses
-- **Be used in DPO training** 
+- **Generate synthetic preference pairs for DPO training** 
 
 ##  Quick Start
 
