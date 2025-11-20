@@ -190,6 +190,6 @@ Customize behavior via YAML configs in `config/`:
 - Data split ratios
 
 
-## 📝 License
+## License
 
 MIT License - see [LICENSE](LICENSE) file for details.
