@@ -2,7 +2,7 @@
 
 **Distill Claude's judgment into a lightweight reward model for efficient best-of-N sampling and RLAIF.**
 
-Train fast, local reward models that replicate Claude's evaluation of language tutor responses—enabling scalable response selection and reinforcement learning without API costs at inference time.
+Train fast, local reward models that replicate Claude's evaluation of language tutor responses.
 
 ##  Purpose
 
