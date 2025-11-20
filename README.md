@@ -8,7 +8,7 @@ Train fast, local reward models that replicate Claude's evaluation of language t
 
 This repo creates reward models that can:
 - **Score tutor responses** on pedagogical quality (engagement, accuracy, personalization)
-- **Enable best-of-N sampling** in your own code to select best responses
+- **Enable best-of-N sampling** during inference to select best responses
 - **Be used in DPO training** 
 
 ##  Quick Start
@@ -73,7 +73,7 @@ The pipeline produces:
 - **Training logs**: `outputs/logs/`
 - **Evaluation report**: Shows correlation between reward model and Claude scores
 
-## 🔧 Using the Reward Model
+## Using the Reward Model
 
 ### In Your Own Code
 ```python
