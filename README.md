@@ -63,7 +63,7 @@ python scripts/03_train_reward_model.py
 python scripts/04_evaluate_reward_model.py
 ```
 
-## 📊 Results
+## Results
 
 The pipeline produces:
 
