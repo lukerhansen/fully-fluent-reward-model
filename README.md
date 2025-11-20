@@ -2,7 +2,7 @@
 
 **Distill Claude's judgment into a lightweight reward model for efficient best-of-N sampling and RLAIF.**
 
-Train fast, local reward models that replicate Claude's evaluation of language tutor responses—enabling scalable response selection and reinforcement learning without API costs.
+Train fast, local reward models that replicate Claude's evaluation of language tutor responses—enabling scalable response selection and reinforcement learning without API costs at inference time.
 
 ##  Purpose
 
@@ -16,7 +16,7 @@ This repo creates reward models that can:
 ### 1. Setup
 ```bash
 # Clone repo
-git clone https://github.com/your-username/fully-fluent-reward-model.git
+git clone https://github.com/lukerhansen/fully-fluent-reward-model.git
 cd fully-fluent-reward-model
 
 # Create virtual environment
