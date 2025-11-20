@@ -98,42 +98,50 @@ scores = scorer.score_batch(
 
 ### Best-of-N Sampling Example
 ```python
+import torch
 from transformers import AutoModelForCausalLM, AutoTokenizer
 from src.reward_model.inference import RewardModelScorer
 
-# Load your base model
-base_model = AutoModelForCausalLM.from_pretrained("Qwen/Qwen2.5-7B-Instruct")
-tokenizer = AutoTokenizer.from_pretrained("Qwen/Qwen2.5-7B-Instruct")
-
-# Load reward model
+# Load models
+device = "cuda" if torch.cuda.is_available() else "cpu"
+base_model_name = "Qwen/Qwen2.5-7B-Instruct"
+base_model = AutoModelForCausalLM.from_pretrained(base_model_name).to(device)
+tokenizer = AutoTokenizer.from_pretrained(base_model_name)
 scorer = RewardModelScorer("models/reward_model_final")
 
-# Generate N candidates
 context = "Student: Help me with grammar"
-candidates = []
-for _ in range(5):
-    inputs = tokenizer(context, return_tensors="pt")
-    output = base_model.generate(
-        **inputs,
-        max_new_tokens=100,
-        do_sample=True,
-        temperature=0.7
-    )
-    candidates.append(tokenizer.decode(output[0], skip_special_tokens=True))
 
-# Score all candidates
-scores = scorer.score_batch(
-    contexts=[context] * len(candidates),
-    responses=candidates
+# Generate N candidates in parallel
+inputs = tokenizer(context, return_tensors="pt").to(device)
+outputs = base_model.generate(
+    **inputs,
+    max_new_tokens=100,
+    num_return_sequences=5,
+    do_sample=True,
+    temperature=0.7,
+)
+
+# Decode only the newly generated tokens (responses)
+input_len = inputs["input_ids"].shape[1]
+candidates = tokenizer.batch_decode(
+    outputs[:, input_len:], skip_special_tokens=True
+)
+
+# Score with reward model
+scores = list(
+    scorer.score_batch(
+        contexts=[context] * len(candidates),
+        responses=candidates,
+    )
 )
 
 # Select best
-best_idx = scores.index(max(scores))
+best_idx = max(range(len(scores)), key=lambda i: scores[i])
 best_response = candidates[best_idx]
-print(f"Selected response with score {scores[best_idx]:.2f}")
+print(f"Best score: {scores[best_idx]:.3f}")
+print(best_response)
 ```
 
-See `docs/USAGE.md` for more detailed examples.
 
 ##  Documentation
 
